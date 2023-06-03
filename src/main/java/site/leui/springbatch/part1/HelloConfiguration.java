@@ -41,9 +41,9 @@ public class HelloConfiguration {
     @Bean
     public Step helloStep() {
         return stepBuilderFactory.get("helloStep")
-                .tasklet(((contribution, chunkContext) -> { // task 기반
+                .tasklet((contribution, chunkContext) -> { // task 기반
                     log.info("hello spring batch");
                     return RepeatStatus.FINISHED;
-                })).build();
+                }).build();
     }
 }
