@@ -1,0 +1,12 @@
+spring:
+  batch:
+    job:
+      names: ${job.name:NONE}
+    jdbc:
+      initialize-schema: never
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mariadb://127.0.0.1:3306/spring_batch?characterEncoding=UTF-8&serverTimezone=UTC
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: leui
+      password: 1234
