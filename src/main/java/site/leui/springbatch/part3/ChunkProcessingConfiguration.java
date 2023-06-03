@@ -1,10 +1,12 @@
 package site.leui.springbatch.part3;
 
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -13,6 +15,7 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,18 +34,18 @@ public class ChunkProcessingConfiguration {
         return jobBuilderFactory.get("chunkProcessingJob")
                 .incrementer(new RunIdIncrementer())
                 .start(this.taskBaseStep())
-                .next(chunkBaseStep())
+                .next(this.chunkBaseStep(null))
                 .build();
     }
 
     @Bean
-    public Step chunkBaseStep() {
+    @JobScope
+    public Step chunkBaseStep(@Value("#{jobParameters[chunkSize]}") String chunkSize) {
         return stepBuilderFactory.get("chunkBaseStep")
-                // 10개씩 실행
-                // <String, String>
-                // 첫 번째 타입: itemReader에 들어올 INPUT 타입의 타입
-                // 두 번째 타입: itemProcessor에서 처리한 OUTPUT 타입의 타입
-                .<String, String>chunk(10)
+                // 20개씩 실행
+                .<String, String>chunk(
+                        StringUtils.isNotEmpty(chunkSize) ? Integer.parseInt(chunkSize) : 20
+                )
                 .reader(itemReader())
                 .processor(itemProcessor())
                 .writer(itemWriter())
@@ -58,8 +61,11 @@ public class ChunkProcessingConfiguration {
     }
 
     private ItemWriter<? super String> itemWriter() {
-//        return items -> log.info("chunk item size : {}", items.size()); // processor의 결과 값을 log로 찍음
-        return items -> items.forEach(log::info);
+        return items -> System.out.println(
+                "\nChunk---------------\n" +
+                "task item size : " + items.size() +
+                "\n--------------------\n"
+        );
     }
 
     @Bean
@@ -72,6 +78,11 @@ public class ChunkProcessingConfiguration {
     private Tasklet tasklet() {
         return ((contribution, chunkContext) -> {
             List<String> items = getItems();
+            System.out.println(
+                    "\nTask================\n" +
+                    "task item size : " + items.size() +
+                    "\n====================\n"
+            );
             log.info("task item size: {}", items.size());
             return RepeatStatus.FINISHED;
         });
