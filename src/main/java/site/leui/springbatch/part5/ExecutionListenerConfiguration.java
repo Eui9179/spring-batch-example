@@ -43,6 +43,7 @@ public class ExecutionListenerConfiguration {
                 .<Member, Member>chunk(10)
                 .reader(jpaItemReader())
                 .writer(itemWriter())
+                .listener(new ExecutionListener.StepExecutionListenerExampleAnno())
                 .build();
     }
 
