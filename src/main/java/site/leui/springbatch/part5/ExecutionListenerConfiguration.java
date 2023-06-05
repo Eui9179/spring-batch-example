@@ -28,16 +28,18 @@ public class ExecutionListenerConfiguration {
     private final EntityManagerFactory entityManagerFactory;
 
     @Bean
-    public Job executionListenerJob() {
-        return jobBuilderFactory.get("executionListenerJob")
+    public Job executionListenerExampleJob() {
+        return jobBuilderFactory.get("executionListenerExampleJob")
                 .incrementer(new RunIdIncrementer())
-                .start(executionListenerStep())
+                .start(executionListenerExampleStep())
+                .listener(new ExecutionListener.JobExecutionListenerExampleImpl())
+                .listener(new ExecutionListener.JobExecutionListenerExampleAnno())
                 .build();
     }
 
     @Bean
-    public Step executionListenerStep() {
-        return stepBuilderFactory.get("executionListenerStep")
+    public Step executionListenerExampleStep() {
+        return stepBuilderFactory.get("executionListenerExampleStep")
                 .<Member, Member>chunk(10)
                 .reader(jpaItemReader())
                 .writer(itemWriter())
