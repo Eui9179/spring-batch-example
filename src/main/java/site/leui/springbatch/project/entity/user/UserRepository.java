@@ -1,4 +1,4 @@
-package site.leui.springbatch.project1;
+package site.leui.springbatch.project.entity.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

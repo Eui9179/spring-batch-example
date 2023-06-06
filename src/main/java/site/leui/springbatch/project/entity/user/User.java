@@ -1,18 +1,21 @@
-package site.leui.springbatch.project1;
+package site.leui.springbatch.project.entity.user;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.leui.springbatch.project.entity.BaseEntity;
+import site.leui.springbatch.project.entity.oders.Orders;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class User {
-
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,25 +25,27 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Level level = Level.NORMAL;
 
-    private LocalDateTime updatedDate;
-
-    private int totalAmount;
+    @OneToMany(mappedBy = "user")
+    private List<Orders> orders = new ArrayList<>();
 
     @Builder
-    private User(String username, int totalAmount) {
+    private User(String username) {
         this.username = username;
-        this.totalAmount = totalAmount;
     }
 
     public boolean availableLeveUp() {
         return Level.availableLevelUp(this.getLevel(), this.getTotalAmount());
     }
 
+    public int getTotalAmount() {
+        return orders.stream()
+                .mapToInt(Orders::getAmount)
+                .sum();
+    }
+
     public Level levelUp() {
         Level nextLevel = Level.getNextLevel(this.getTotalAmount());
-
         this.level = nextLevel;
-        this.updatedDate = LocalDateTime.now();
 
         return nextLevel;
     }

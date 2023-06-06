@@ -1,4 +1,4 @@
-package site.leui.springbatch.project1;
+package site.leui.springbatch.project;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobExecution;
@@ -23,7 +23,5 @@ public class UserJobExecutionListener implements JobExecutionListener {
 
         log.info("실행 시간 : {}",
                 jobExecution.getEndTime().getTime() - jobExecution.getStartTime().getTime());
-
-
     }
 }
