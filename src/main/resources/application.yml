@@ -10,11 +10,8 @@ spring:
       driver-class-name: org.mariadb.jdbc.Driver
       username: leui
       password: 1234
-  sql:
-    init:
-      mode: always
   jpa:
     defer-datasource-initialization: true
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
