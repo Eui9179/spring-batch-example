@@ -33,7 +33,7 @@ https://me2.kr/IIIiI
   - Task
 ### Spring Batch 테이블 구조와 이해
 
-이미지 삽입
+<img width="886" alt="batch_table" src="https://github.com/Eui9179/spring-batch-example/assets/83222282/48b0b24b-9231-47c8-b174-c1dc7ee713f7">
 
 
 ## Part3
@@ -61,6 +61,8 @@ https://me2.kr/Zlurg
     1. Reader: 데이터를 읽어온다.
     2. Processor: 데이터를 가공, 처리한다.
     3. Writer: 데이터를 데이터 베이스에 저장 등 이후 처리를 한다.
+
+<img width="3450" alt="Frame 337" src="https://github.com/Eui9179/spring-batch-example/assets/83222282/063b164e-d1eb-4a0d-a330-7a16a9b8f3b3">
 
 
 > 💡 @JobScope, @StepScope 심화
